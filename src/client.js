@@ -1,6 +1,7 @@
 import { Brush } from './brush.js';
 import { EventEmitter } from 'node:events';
 import { BluetoothFilter } from './bluetoothFilter.js';
+import { toSigned } from './utils/helpers.js';
 
 export class OralBClient extends EventEmitter {
   constructor(noble) {
@@ -14,6 +15,10 @@ export class OralBClient extends EventEmitter {
     const brushes = new Map();
 
     const onDiscover = (peripheral) => {
+      if (peripheral?.advertisement?.manufacturerData) {
+        peripheral.advertisement.manufacturerData = toSigned(peripheral.advertisement.manufacturerData); // Convert to signed for ez handling
+      }
+
       if (!filter.matches(peripheral)) return;
       const address = peripheral.address;
 

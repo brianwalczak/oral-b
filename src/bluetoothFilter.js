@@ -1,15 +1,10 @@
 // src\main\java\codes\alchemy\oralb\blesdk\scan\model\BrushFilter.java
 import { BrushModel } from './definitions/brushModel.js';
 
-function toSigned(arr) {
-  if (!arr || arr.length === 0) return arr;
-  return new Int8Array(Uint8Array.from(arr).buffer);
-};
-
 export class BluetoothFilter {
   matches(peripheral) {
     const advertisement = peripheral?.advertisement;
-    const manufacturerData = toSigned(advertisement?.manufacturerData);
+    const manufacturerData = advertisement?.manufacturerData;
 
     if (!manufacturerData || manufacturerData.length < 4) return false;
 
