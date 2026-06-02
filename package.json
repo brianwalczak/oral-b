@@ -1,0 +1,30 @@
+{
+  "name": "oral-b",
+  "version": "1.0.0",
+  "description": "A Node.js library for BLE communication with Oral-B smart toothbrushes.",
+  "keywords": [
+    "oral-b",
+    "oralb",
+    "bluetooth",
+    "ble",
+    "bluetooth-low-energy",
+    "gatt",
+    "toothbrush",
+    "noble",
+    "iot",
+    "hardware"
+  ],
+  "homepage": "https://github.com/brianwalczak/oral-b#readme",
+  "bugs": {
+    "url": "https://github.com/brianwalczak/oral-b/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brianwalczak/oral-b.git"
+  },
+  "license": "Apache-2.0",
+  "author": "Brian Walczak",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {}
+}
