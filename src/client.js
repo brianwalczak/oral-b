@@ -5,6 +5,7 @@ import { toSigned } from './utils/helpers.js';
 
 export class OralBClient extends EventEmitter {
   #connectedBrushes = new Map();
+  #discoverResolve = null;
 
   constructor(noble) {
     super();
@@ -90,14 +91,24 @@ export class OralBClient extends EventEmitter {
     this.noble.on('discover', onDiscover);
     await this.noble.startScanningAsync([], false);
 
-    await new Promise((resolve) => setTimeout(resolve, timeout));
+    await new Promise((resolve) => {
+      this.#discoverResolve = resolve;
+      setTimeout(resolve, timeout);
+    });
 
+    this.#discoverResolve = null;
     await this.noble.stopScanningAsync();
     this.noble.removeListener('discover', onDiscover);
 
     const result = Array.from(brushes.values());
     this.emit('discoverEnd', result);
     return result;
+  }
+
+  stopDiscover() {
+    if (this.#discoverResolve) {
+      this.#discoverResolve();
+    }
   }
 
   // just for convenience in-case they wanna use the client instead
