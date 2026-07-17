@@ -9,13 +9,13 @@ export function withTimeout(promise, ms, message) {
 }
 
 export function toSigned(value) {
-    return value >= 128 ? value - 256 : value;
+	return value >= 128 ? value - 256 : value;
 }
 
 export function toUnsigned(byte) {
-    return byte < 0 ? byte + 256 : byte;
+	return byte < 0 ? byte + 256 : byte;
 }
 
 export function toSignedArr(values) {
-    return Array.from(values, toSigned);
+	return Array.from(values, toSigned);
 }

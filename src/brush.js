@@ -1,9 +1,9 @@
-import { EventEmitter } from 'node:events';
-import { BrushModel } from './definitions/brushModel.js';
-import { Protocol } from './definitions/protocol.js'
-import { withTimeout } from './utils/helpers.js';
-import { Transport } from './transport.js';
-import { OUTGOING, INCOMING } from './commands/index.js';
+import { EventEmitter } from "node:events";
+import { BrushModel } from "./definitions/brushModel.js";
+import { Protocol } from "./definitions/protocol.js";
+import { withTimeout } from "./utils/helpers.js";
+import { Transport } from "./transport.js";
+import { OUTGOING, INCOMING } from "./commands/index.js";
 
 export class Brush extends EventEmitter {
 	#model;
@@ -37,28 +37,28 @@ export class Brush extends EventEmitter {
 		}
 
 		// [brush -> device] subscriptions can be registered as event emitters
-		this.on('newListener', (eventName) => {
+		this.on("newListener", (eventName) => {
 			if (!this.isConnected) return;
 
-			const command = INCOMING.find(c => c.name === eventName);
+			const command = INCOMING.find((c) => c.name === eventName);
 			if (!command || this.#unsubscribers.has(command.name)) return;
 
 			const promise = this.transport.subscribe(command.uuid, (bytes) => {
 				try {
 					this.emit(eventName, command.parse(bytes));
-				} catch {};
+				} catch {}
 			});
 
 			this.#unsubscribers.set(command.name, promise);
 
 			promise.catch((err) => {
 				this.#unsubscribers.delete(command.name);
-				this.emit('error', err);
+				this.emit("error", err);
 			});
 		});
 
 		// handle removal of [brush -> device] subscriptions
-		this.on('removeListener', async (eventName) => {
+		this.on("removeListener", async (eventName) => {
 			if (this.listenerCount(eventName) > 0) return;
 
 			const promise = this.#unsubscribers.get(eventName);
@@ -69,24 +69,24 @@ export class Brush extends EventEmitter {
 			try {
 				const unsubscribe = await promise;
 				await unsubscribe();
-			} catch {};
+			} catch {}
 		});
 	}
 
 	get macAddress() {
 		return this.peripheral?.address;
 	}
-	
+
 	get rssi() {
 		return this.peripheral?.rssi;
 	}
 
 	get isConnected() {
-		return this.peripheral?.state === 'connected';
+		return this.peripheral?.state === "connected";
 	}
 
 	async connect({ timeout = 10000 } = {}) {
-		if (!this.peripheral) throw new Error('Cannot connect to brush: no peripheral found!');
+		if (!this.peripheral) throw new Error("Cannot connect to brush: no peripheral found!");
 
 		if (this.isConnected) {
 			return this;
@@ -114,14 +114,14 @@ export class Brush extends EventEmitter {
 		// catch up on listeners registered before we connected or still there after a reconnect
 		for (const command of INCOMING) {
 			if (this.listenerCount(command.name) > 0) {
-				this.emit('newListener', command.name);
+				this.emit("newListener", command.name);
 			}
 		}
 
-		this.emit('connect', this);
+		this.emit("connect", this);
 
-		this.peripheral.once('disconnect', () => {
-			this.emit('disconnect', this);
+		this.peripheral.once("disconnect", () => {
+			this.emit("disconnect", this);
 			this.#unsubscribers.clear(); // get rid of unsubscribers (we don't actually need to trigger them since the characteristics are gone)
 		});
 
@@ -129,8 +129,8 @@ export class Brush extends EventEmitter {
 	}
 
 	async disconnect() {
-		if (!this.peripheral) throw new Error('Cannot disconnect from brush: no peripheral found!');
-		
+		if (!this.peripheral) throw new Error("Cannot disconnect from brush: no peripheral found!");
+
 		if (!this.isConnected) {
 			return this;
 		}
