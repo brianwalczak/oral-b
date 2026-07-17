@@ -8,7 +8,14 @@ export function withTimeout(promise, ms, message) {
 	return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
 }
 
-export function toSigned(arr) {
-  if (!arr || arr.length === 0) return arr;
-  return new Int8Array(Uint8Array.from(arr).buffer);
+export function toSigned(value) {
+    return value >= 128 ? value - 256 : value;
+}
+
+export function toUnsigned(byte) {
+    return byte < 0 ? byte + 256 : byte;
+}
+
+export function toSignedArr(values) {
+    return Array.from(values, toSigned);
 }

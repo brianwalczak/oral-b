@@ -1,53 +1,55 @@
 // src\main\java\codes\alchemy\oralb\blesdk\data\characteristic\model\ProtocolVersion.java
+// Versions are stored as signed by default.
+
 export class Protocol {
     static UNKNOWN = Object.freeze({
         name: "UNKNOWN",
-        value: 0
+        version: 0
     });
 
     static V001 = Object.freeze({
         name: "V001",
-        value: 1
+        version: 1
     });
 
     static V002 = Object.freeze({
         name: "V002",
-        value: 2
+        version: 2
     });
 
     static V003 = Object.freeze({
         name: "V003",
-        value: 3
+        version: 3
     });
 
     static V004 = Object.freeze({
         name: "V004",
-        value: 4
+        version: 4
     });
 
     static V005 = Object.freeze({
         name: "V005",
-        value: 5
+        version: 5
     });
 
     static V006 = Object.freeze({
         name: "V006",
-        value: 6
+        version: 6
     });
 
     static V007 = Object.freeze({
         name: "V007",
-        value: 7
+        version: 7
     });
 
     static V008 = Object.freeze({
         name: "V008",
-        value: 8
+        version: 8
     });
 
     static V009 = Object.freeze({
         name: "V009",
-        value: 9
+        version: 9
     });
 
     static values = [
@@ -64,6 +66,6 @@ export class Protocol {
     ];
 
     static fromByte(byte) {
-        return Protocol.values.find(protocol => protocol.value === byte) ?? Protocol.UNKNOWN;
+        return Protocol.values.find(protocol => protocol.version === byte) ?? Protocol.UNKNOWN;
     }
 }

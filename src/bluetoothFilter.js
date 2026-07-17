@@ -4,7 +4,7 @@ import { BrushModel } from './definitions/brushModel.js';
 export class BluetoothFilter {
   matches(peripheral) {
     const advertisement = peripheral?.advertisement;
-    const manufacturerData = advertisement?.manufacturerData;
+    const manufacturerData = advertisement?.manufacturerData; // signed (byte)
 
     if (!manufacturerData || manufacturerData.length < 4) return false;
 
@@ -13,6 +13,6 @@ export class BluetoothFilter {
         return false;
     }
 
-    return !!BrushModel.fromByte(manufacturerData[3]); // Check if it's a valid brush model
+    return !!BrushModel.fromByte(manufacturerData[3]).brush; // Check if it's a valid brush model
   }
 }

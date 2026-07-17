@@ -1,7 +1,7 @@
 import { Brush } from './brush.js';
 import { EventEmitter } from 'node:events';
 import { BluetoothFilter } from './bluetoothFilter.js';
-import { toSigned } from './utils/helpers.js';
+import { toSignedArr } from './utils/helpers.js';
 
 export class OralBClient extends EventEmitter {
   #connectedBrushes = new Map();
@@ -73,7 +73,7 @@ export class OralBClient extends EventEmitter {
 
     const onDiscover = (peripheral) => {
       if (peripheral?.advertisement?.manufacturerData) {
-        peripheral.advertisement.manufacturerData = toSigned(peripheral.advertisement.manufacturerData); // Convert to signed for ez handling
+        peripheral.advertisement.manufacturerData = toSignedArr(peripheral.advertisement.manufacturerData); // Convert to signed for ez handling
       }
 
       if (!filter.matches(peripheral)) return;
@@ -92,8 +92,8 @@ export class OralBClient extends EventEmitter {
     await this.noble.startScanningAsync([], false);
 
     await new Promise((resolve) => {
-      this.#discoverResolve = resolve;
-      setTimeout(resolve, timeout);
+      const timer = setTimeout(resolve, timeout);
+      this.#discoverResolve = () => { clearTimeout(timer); resolve(); };
     });
 
     this.#discoverResolve = null;
