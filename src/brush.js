@@ -33,7 +33,7 @@ export class Brush extends EventEmitter {
 		// [brush -> device] data become getter methods in brush.get to request them (like brush.get.batteryLevel())
 		this.get = {};
 		for (const command of INCOMING) {
-			this.get[command.name] = async () => command.parse(await this.transport.read(command.uuid));
+			this.get[command.name] = async () => command.parse(this, await this.transport.read(command.uuid));
 		}
 
 		// [brush -> device] subscriptions can be registered as event emitters
@@ -45,7 +45,7 @@ export class Brush extends EventEmitter {
 
 			const promise = this.transport.subscribe(command.uuid, (bytes) => {
 				try {
-					this.emit(eventName, command.parse(bytes));
+					this.emit(eventName, command.parse(this, bytes));
 				} catch {}
 			});
 
