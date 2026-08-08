@@ -22,7 +22,7 @@ export class Brush extends EventEmitter {
 		this.isiO = this.#model?.brush?.isiO || false;
 
 		this.transport = new Transport(peripheral);
-		this.protocol = Protocol.fromByte(peripheral?.advertisement?.manufacturerData?.[2]);
+		this.protocol = Protocol.fromByte(peripheral?.advertisement?.manufacturerData?.[2]).name;
 
 		// [device -> brush] commands become methods in brush.set (like brush.set.setColor(...))
 		this.set = {};

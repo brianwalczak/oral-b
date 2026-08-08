@@ -6,7 +6,7 @@ export default {
 	uuid: "FF05",
 
 	parse(brush, bytes) {
-		const protocol = brush?.protocol ?? Protocol.UNKNOWN;
+		const protocol = Protocol.fromName(brush?.protocol);
 
 		switch (protocol) {
 			case Protocol.UNKNOWN:

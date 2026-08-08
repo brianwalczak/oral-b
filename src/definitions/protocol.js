@@ -57,4 +57,8 @@ export class Protocol {
 	static fromByte(byte) {
 		return Protocol.values.find((protocol) => protocol.version === byte) ?? Protocol.UNKNOWN;
 	}
+
+	static fromName(name) {
+		return Protocol.values.find((protocol) => protocol.name === name) ?? Protocol.UNKNOWN;
+	}
 }
