@@ -84,19 +84,19 @@ A `Brush` represents a single physical toothbrush. Instances come from [`OralBCl
 
 #### Properties
 
-| Property      | Type             | Description                                                                                             |
-| ------------- | ---------------- | ------------------------------------------------------------------------------------------------------- |
-| `deviceName`  | `string`         | The brush model name, such as `"iO Series"`. `"Unknown"` if unrecognized.                               |
-| `deviceType`  | `string \| null` | The variant within the brush model, such as `"6 Mode"`.                                                 |
-| `isiO`        | `boolean`        | Whether this brush is an Oral-B iO series model.                                                        |
-| `protocol`    | `string`         | Firmware protocol version, such as `"V006"`. Determines how some characteristics are decoded.           |
-| `macAddress`  | `string`         | The brush's Bluetooth MAC address.                                                                      |
-| `rssi`        | `number`         | Signal strength of the brush.                                                                           |
-| `isConnected` | `boolean`        | Whether the brush is currently connected.                                                               |
-| `get`         | `object`         | Methods for reading data from the brush (returns a `Promise` of the result). See [Commands](#commands). |
-| `set`         | `object`         | Methods for sending data to the brush. See [Commands](#commands).                                       |
-| `peripheral`  | `Peripheral`     | The underlying Noble peripheral instance used internally.                                               |
-| `transport`   | `Transport`      | The characteristic layer used internally for reads, writes, and subscriptions.                          |
+| Property      | Type             | Description                                                                                               |
+| ------------- | ---------------- | --------------------------------------------------------------------------------------------------------- |
+| `deviceName`  | `string`         | The brush model name, such as `"iO Series"`. `"Unknown"` if unrecognized.                                 |
+| `deviceType`  | `string \| null` | The variant within the brush model, such as `"6 Mode"`.                                                   |
+| `isiO`        | `boolean`        | Whether this brush is an Oral-B iO series model.                                                          |
+| `protocol`    | `string`         | Firmware protocol version, such as `"V006"`. Newer versions may return differing data from some commands. |
+| `macAddress`  | `string`         | The brush's Bluetooth MAC address.                                                                        |
+| `rssi`        | `number`         | Signal strength of the brush.                                                                             |
+| `isConnected` | `boolean`        | Whether the brush is currently connected.                                                                 |
+| `get`         | `object`         | Methods for reading data from the brush (returns a `Promise` of the result). See [Commands](#commands).   |
+| `set`         | `object`         | Methods for sending data to the brush. See [Commands](#commands).                                         |
+| `peripheral`  | `Peripheral`     | The underlying Noble peripheral instance used internally.                                                 |
+| `transport`   | `Transport`      | The Bluetooth communication layer used internally to read, write, and subscribe to data.                  |
 
 #### Methods
 
@@ -131,7 +131,7 @@ brush.on("brushingTime", ({ minutes, seconds }) => {
 });
 ```
 
-Support for individual commands (as well as certain values) varies by the firmware protocol version the brush model uses, which is noted on each command's page.
+Some commands will return differing data on newer firmware protocol versions. When this is the case, it will be noted on the command's page.
 
 #### Incoming
 
