@@ -36,7 +36,7 @@ const brush = brushes[0];
 await brush.connect();
 
 // Read a value once.
-console.log(await brush.get.brushingTime()); // { minutes: 1, seconds: 26 }
+console.log(await brush.get.deviceState()); // { state: "RUN", subState: "UNKNOWN" }
 
 // Or subscribe, and let the brush push updates.
 brush.on("brushingTime", ({ minutes, seconds }) => {
@@ -123,11 +123,11 @@ Commands come in two directions:
 
 ```js
 // Read a value once.
-const { minutes, seconds } = await brush.get.brushingTime();
+const { state } = await brush.get.deviceState();
 
 // Or subscribe, and let the brush push updates.
-brush.on("brushingTime", ({ minutes, seconds }) => {
-	console.log(`Brushing for ${minutes}m ${seconds}s.`);
+brush.on("deviceState", ({ state }) => {
+	if (state === "RUN") console.log("Brushing has started!");
 });
 ```
 
