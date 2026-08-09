@@ -6,6 +6,7 @@ import { toSignedArr } from "./utils/helpers.js";
 export class OralBClient extends EventEmitter {
 	#connectedBrushes = new Map();
 	#discoverResolve = null;
+	#noble;
 
 	constructor(noble) {
 		super();
@@ -14,7 +15,7 @@ export class OralBClient extends EventEmitter {
 			throw new Error("Noble is required for OralBClient. Please install `@stoprocent/noble` and pass it as a parameter.");
 		}
 
-		this.noble = noble;
+		this.#noble = noble;
 	}
 
 	getConnectedBrushes() {
@@ -30,13 +31,13 @@ export class OralBClient extends EventEmitter {
 	}
 
 	#waitUntilReady(timeout = 5000) {
-		if (this.noble?.state === "poweredOn") {
+		if (this.#noble?.state === "poweredOn") {
 			return Promise.resolve();
 		}
 
 		return new Promise((resolve, reject) => {
 			const timer = setTimeout(() => {
-				this.noble.removeListener("stateChange", onStateChange);
+				this.#noble.removeListener("stateChange", onStateChange);
 
 				reject(new Error(`Cannot start scanning: Bluetooth adapter not powered on (timed out after ${timeout}ms)!`));
 			}, timeout);
@@ -44,12 +45,12 @@ export class OralBClient extends EventEmitter {
 			const onStateChange = (state) => {
 				if (state === "poweredOn") {
 					clearTimeout(timer);
-					this.noble.removeListener("stateChange", onStateChange);
+					this.#noble.removeListener("stateChange", onStateChange);
 					resolve();
 				}
 			};
 
-			this.noble.on("stateChange", onStateChange);
+			this.#noble.on("stateChange", onStateChange);
 		});
 	}
 
@@ -88,8 +89,8 @@ export class OralBClient extends EventEmitter {
 			}
 		};
 
-		this.noble.on("discover", onDiscover);
-		await this.noble.startScanningAsync([], false);
+		this.#noble.on("discover", onDiscover);
+		await this.#noble.startScanningAsync([], false);
 
 		await new Promise((resolve) => {
 			const timer = setTimeout(resolve, timeout);
@@ -100,8 +101,8 @@ export class OralBClient extends EventEmitter {
 		});
 
 		this.#discoverResolve = null;
-		await this.noble.stopScanningAsync();
-		this.noble.removeListener("discover", onDiscover);
+		await this.#noble.stopScanningAsync();
+		this.#noble.removeListener("discover", onDiscover);
 
 		const result = Array.from(brushes.values());
 		this.emit("discoverEnd", result);
