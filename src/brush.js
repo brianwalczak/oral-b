@@ -1,9 +1,13 @@
 import { EventEmitter } from "node:events";
 import { BrushModel } from "./definitions/brushModel.js";
 import { Protocol } from "./definitions/protocol.js";
+import { AccessControl } from "./definitions/accessControl.js";
 import { withTimeout } from "./utils/helpers.js";
 import { Transport } from "./transport.js";
 import { OUTGOING, INCOMING } from "./commands/index.js";
+
+// src\main\java\codes\alchemy\oralb\blesdk\devices\model\Brush.java
+const ACCESS_CONTROLLED_PROTOCOLS = [Protocol.V007, Protocol.V008, Protocol.V009];
 
 export class Brush extends EventEmitter {
 	#model;
@@ -107,6 +111,10 @@ export class Brush extends EventEmitter {
 		} catch (err) {
 			this.peripheral.disconnectAsync().catch(() => {}); // disconnect the brush if timed out (don't leave it connecting)
 			throw err;
+		}
+
+		if (ACCESS_CONTROLLED_PROTOCOLS.includes(Protocol.fromName(this.protocol))) {
+			await this.transport.writeSequence([{ uuid: AccessControl.UUID, bytes: AccessControl.UNLOCK_CODE }]);
 		}
 
 		this.#unsubscribers.clear(); // clean up unsubscribers just in-case they're stale
