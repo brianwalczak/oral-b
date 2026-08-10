@@ -76,24 +76,28 @@ export class Transport {
 	}
 
 	// Subscribe to a characteristic's notifications (and return unsubscribe function).
-	async subscribe(shortUuid, onData) {
-		const characteristic = await this.#find(shortUuid);
-		const onNotify = (data) => onData(data);
+	subscribe(shortUuid, onData) {
+		return this.#enqueue(async () => {
+			const characteristic = await this.#find(shortUuid);
+			const onNotify = (data) => onData(data);
 
-		// subscribe first, then attach the listener (so a failed subscribe doesn't leak it)
-		await characteristic.subscribeAsync();
-		characteristic.on("data", onNotify);
+			// subscribe first, then attach the listener (so a failed subscribe doesn't leak it)
+			await characteristic.subscribeAsync();
+			characteristic.on("data", onNotify);
 
-		// return an unsubscribe function that can be used later
-		return async () => {
-			characteristic.removeListener("data", onNotify);
-			await characteristic.unsubscribeAsync();
-		};
+			// return an unsubscribe function that can be used later
+			return async () => {
+				characteristic.removeListener("data", onNotify);
+				await characteristic.unsubscribeAsync();
+			};
+		});
 	}
 
 	// Request a read from a characteristic.
-	async read(shortUuid) {
-		const characteristic = await this.#find(shortUuid);
-		return characteristic.readAsync();
+	read(shortUuid) {
+		return this.#enqueue(async () => {
+			const characteristic = await this.#find(shortUuid);
+			return characteristic.readAsync();
+		});
 	}
 }
