@@ -1,6 +1,6 @@
 {
 	"name": "oral-b",
-	"version": "1.0.0",
+	"version": "0.1.0",
 	"description": "A Node.js library for BLE communication with Oral-B smart toothbrushes.",
 	"keywords": [
 		"oral-b",
@@ -26,11 +26,26 @@
 	"author": "Brian Walczak",
 	"type": "module",
 	"main": "src/index.js",
+	"engines": {
+		"node": ">=15"
+	},
+	"files": [
+		"src",
+		"docs"
+	],
 	"scripts": {
 		"format": "prettier --write .",
 		"format:check": "prettier --check ."
 	},
 	"devDependencies": {
 		"prettier": "^3.9.5"
+	},
+	"peerDependencies": {
+		"@stoprocent/noble": "*"
+	},
+	"peerDependenciesMeta": {
+		"@stoprocent/noble": {
+			"optional": true
+		}
 	}
 }
