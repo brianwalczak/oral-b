@@ -1,0 +1,12 @@
+{
+  "name": "examples",
+  "version": "0.1.0",
+  "description": "A library of examples using the oral-b library.",
+  "license": "MIT",
+  "author": "Brian Walczak",
+  "type": "module",
+  "dependencies": {
+    "@stoprocent/noble": "^2.7.1",
+    "oral-b": "^0.1.0"
+  }
+}
